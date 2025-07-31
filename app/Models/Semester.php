@@ -2,11 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Semester extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'academic_session_id',
+    ];
+
     public function academicSession()
     {
         return $this->belongsTo(AcademicSession::class);
@@ -32,4 +39,8 @@ class Semester extends Model
         return $this->hasMany(Result::class);
     }
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'like', '%' . $search . '%');
+    }
 }

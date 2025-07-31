@@ -23,7 +23,16 @@ class User extends Authenticatable
         'lastname',
         'email',
         'password',
+        'role',
     ];
+
+    public function hasRole($roles)
+    {
+        if (is_array($roles)) {
+            return in_array($this->role, $roles);
+        }
+        return $this->role === $roles;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -85,4 +94,10 @@ class User extends Authenticatable
         return $this->hasMany(ActivityLog::class);
     }
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('firstname', 'like', '%' . $search . '%')
+            ->orWhere('lastname', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%');
+    }
 }
